@@ -56,8 +56,14 @@ The skill walks you through a short setup and stores your configuration outside 
 | Provider | Portal |
 |----------|--------|
 | ClickUp | app.clickup.com |
+| Cloudflare | dash.cloudflare.com |
+| DigitalOcean | cloud.digitalocean.com |
+| E WIE EINFACH | mein.e-wie-einfach.de |
+| EnBW Smart Mobility | smartmobility.enbw.com |
 | EWE Go | portal.ewe-go.de |
 | Placetel | web.placetel.de |
+| SendGrid (Twilio) | app.sendgrid.com |
+| Webflow | webflow.com |
 
 Any portal not listed: run the skill with the URL and let Learn Mode figure it out — then consider [contributing the recipe](CONTRIBUTING.md) so the next person gets that portal for free.
 
