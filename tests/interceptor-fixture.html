@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Get Invoices interceptor fixture</title>
+  </head>
+  <body>
+    <button id="fetch-pdf" type="button">Fetch PDF</button>
+    <script>
+      const bytes = new TextEncoder().encode("%PDF-1.4\nfixture invoice\n%%EOF\n");
+
+      document.querySelector("#fetch-pdf").addEventListener("click", async () => {
+        const response = await fetch("/invoice.pdf");
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "invoice.pdf";
+        anchor.click();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>

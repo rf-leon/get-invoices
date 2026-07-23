@@ -1,0 +1,34 @@
+{
+  "name": "get-invoices",
+  "version": "0.3.0",
+  "description": "Fetch invoices from signed-in billing portals and file verified PDFs in Paperless-ngx or local storage.",
+  "author": {
+    "name": "Leon Heuser",
+    "url": "https://github.com/rf-leon"
+  },
+  "homepage": "https://github.com/rf-leon/get-invoices",
+  "repository": "https://github.com/rf-leon/get-invoices",
+  "keywords": [
+    "billing",
+    "browser-automation",
+    "invoices",
+    "paperless-ngx"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Get Invoices",
+    "shortDescription": "Collect and file invoices from billing portals",
+    "longDescription": "Reuse signed-in browser sessions to collect invoice PDFs, prevent duplicate processing, and dispatch verified documents to Paperless-ngx or local storage.",
+    "developerName": "Leon Heuser",
+    "category": "Productivity",
+    "capabilities": [
+      "Browser automation",
+      "Document upload"
+    ],
+    "defaultPrompt": [
+      "Fetch my latest invoices and file them safely.",
+      "Learn this billing portal and save its invoices.",
+      "List the invoice providers this plugin knows."
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Get Invoices"
+  short_description: "Fetch and file invoices from billing portals"
+  default_prompt: "Use $get-invoices to fetch invoices from my billing portals and file them safely."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,5 @@
+config.md
+excalidraw.log
+__pycache__/
+*.pyc
+.pytest_cache/
