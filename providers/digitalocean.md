@@ -24,16 +24,17 @@ billing_email_supported: false
 
 ## Download method
 
-Because direct navigation renders inline, fetch **from a `cloud.digitalocean.com` page context** (same-origin, cookie auth):
+Because direct navigation renders inline, fetch **from a `cloud.digitalocean.com` page context** (same-origin, cookie auth). With `TEAM_ID` and the invoice UUIDs collected from the billing-history DOM:
 
 ```js
-const r = await fetch(base + uuid + '/pdf');
+const base = 'https://cloud.digitalocean.com/v2/customers/do:team:' + TEAM_ID + '/invoices/';
+const r = await fetch(base + INVOICE_UUID + '/pdf');
 const cd = r.headers.get('content-disposition');   // DO's own filename incl. month
-const fn = (cd.match(/filename\*?=(?:UTF-8''|")?([^";]+)/) || [])[1];
+window.__fn = (cd.match(/filename\*?=(?:UTF-8''|")?([^";]+)/) || [])[1];
 const b = await r.blob();
 ```
 
-Then hand the Blob to an extraction bridge (clipboard preferred — see SKILL.md). An in-page fetch from a different origin, or `credentials:'include'` cross-origin, fails with "Failed to fetch" — you must be on a DO page. Files are named `DigitalOcean Invoice {YYYY} {Mon} ({invoice_no}).pdf`.
+The interceptor's fetch hook captures the response — read `__getCapturedPdfMeta()` for the capture key, then hand the Blob to an extraction bridge (clipboard preferred — see SKILL.md). Remember network-performing calls return `{}`: stash the filename in a window var as above. An in-page fetch from a different origin, or `credentials:'include'` cross-origin, fails with "Failed to fetch" — you must be on a DO page. Files are named `DigitalOcean Invoice {YYYY} {Mon} ({invoice_no}).pdf`.
 
 ## What did NOT work (don't retry)
 

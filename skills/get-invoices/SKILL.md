@@ -64,7 +64,7 @@ Resolve the provider file in this order:
 2. `~/.config/get-invoices/providers/<name>.md`
 3. bundled `providers/<name>.md`
 
-Read its navigation and frontmatter (`billing_email_*`, `download_pattern`, and legacy `company_tag`). Resolve Paperless default document type, provider tag, provider correspondent, and cleanup tags from user config. User config overrides a legacy bundled/provider `company_tag`.
+Read its navigation and frontmatter (`billing_email_*`, `download_pattern`, `extraction_bridge`, and legacy `company_tag`). Resolve Paperless default document type, provider tag, provider correspondent, and cleanup tags from user config. User config overrides a legacy bundled/provider `company_tag`.
 
 ### 2. Initialize Chrome
 - Read [browser-runtimes.md](references/browser-runtimes.md) and use the matching runtime.
@@ -150,7 +150,7 @@ If no blob was captured but the provider notes `download_pattern: os-download` o
 
 **Verify the bytes:** choose only a capture whose metadata header starts with `%PDF`. If none does, the page may have returned an error/login page or a non-PDF attachment; do not upload.
 
-**Extract bytes for upload** — use the [extraction bridge](#extraction-bridges) matching the runtime:
+**Extract bytes for upload** — if the provider file specifies `extraction_bridge`, prefer it (some portals only work one way, e.g. direct-nav). Otherwise use the [extraction bridge](#extraction-bridges) matching the runtime:
 - **Claude in Chrome:** clipboard bridge first (zero context cost, zero download manager), chunked base64 only for 1-3 small files, download manager only as last resort.
 - **Codex/ChatGPT desktop:** use `writeCapture()` from `scripts/codex-cdp-bridge.mjs`. It reads bounded base64 chunks, writes a private temporary file, verifies the final byte count, and re-checks `%PDF`.
 - If Chrome happened to also write the file to the download directory (the `dispatchEvent` gap — see [interceptor.js](references/interceptor.js)), validate it independently, use it, and delete it after successful dispatch.
@@ -260,15 +260,27 @@ Before showing it, self-check the derived recipe: no email addresses, no `@`, no
 Then display the **full derived file content** to the user and ask for explicit confirmation. Only after confirmation:
 
 ```bash
-gh repo fork rf-leon/get-invoices --clone=false 2>/dev/null   # idempotent
-git clone --depth 1 https://github.com/<user-fork>/get-invoices /tmp/gi-contrib
-cd /tmp/gi-contrib && git checkout -b add-<provider>
-# write providers/<provider>.md, commit, push
-gh pr create --repo rf-leon/get-invoices --title "Add provider: <name>" \
+FORK_OWNER=$(gh api user -q .login)
+gh repo fork rf-leon/get-invoices --clone=false        # no-op if the fork exists
+gh repo sync "$FORK_OWNER/get-invoices" --source rf-leon/get-invoices || true
+DIR=$(mktemp -d)/get-invoices
+git clone --depth 1 "https://github.com/$FORK_OWNER/get-invoices.git" "$DIR"
+cd "$DIR"
+BRANCH="add-<provider>-$(date +%Y%m%d%H%M)"            # unique — avoids collisions with earlier PRs
+git checkout -b "$BRANCH"
+# write providers/<provider>.md, then regenerate the packaged mirror and validate —
+# CI rejects PRs with a stale mirror or lint findings:
+node scripts/sync-plugin-skill.mjs
+node scripts/sync-plugin-skill.mjs --check
+python3 scripts/lint-providers.py
+git add providers/ skills/ && git commit -m "Add provider: <name>"
+git push -u origin "$BRANCH"
+gh pr create --repo rf-leon/get-invoices --head "$FORK_OWNER:$BRANCH" \
+  --title "Add provider: <name>" \
   --body "New provider recipe learned and verified with at least one successful fetch. No account-specific data included."
 ```
 
-Report the PR URL to the user. Never submit without the confirmation step, and never include the user's personal provider file or config in the PR.
+If the lint fails, fix the recipe before pushing — do not submit a failing PR. Report the PR URL to the user and delete the temporary clone. Never submit without the confirmation step, and never include the user's personal provider file or config in the PR.
 
 ## Destinations
 

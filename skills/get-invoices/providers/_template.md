@@ -14,11 +14,13 @@ billing_email_supported: unknown   # true | false | unknown
 billing_email_url:                 # path or full URL where the setting lives
 
 # Recommended — interception pattern (filled in by Learn Mode after first successful run)
-download_pattern:                  # fetch-blob | anchor-direct | anchor-blob | window-open |
-                                   # anchor-redirect-pdf-viewer | os-download
-                                   # which interceptor hook captured the bytes
-extraction_bridge:                 # clipboard | chunked-base64 | direct-nav | cdp-bridge | os-download
-                                   # how the bytes crossed from page to disk (see SKILL.md § Extraction Bridges)
+download_pattern:                  # which interceptor hook captured the bytes:
+                                   # fetch-blob | xhr-blob | in-page-fetch | anchor-direct | anchor-blob |
+                                   # window-open | anchor-redirect-pdf-viewer | direct-nav | os-download
+                                   # (direct-nav / os-download = no in-page capture is possible;
+                                   #  unknown = not yet confirmed by a successful interception)
+extraction_bridge:                 # how the bytes crossed from page to disk (SKILL.md § Extraction Bridges):
+                                   # clipboard | chunked-base64 | direct-nav | cdp-bridge | os-download
 
 # ── Personal fields ──────────────────────────────────────────────────────────
 # Only valid in a user's own provider file (~/.config/get-invoices/providers/).
@@ -106,5 +108,5 @@ If supported but not set, the skill nudges the user once per run with the `prefe
   - "Date picker defaults to current month only"
   - "Requires scrolling to load older invoices"
   - "Download buttons use JS handlers, no direct PDF URLs"
-  - "Session tied to a specific Chrome profile — use Work Chrome"
+  - "Session tied to a specific Chrome profile — ask the user which profile holds the login"
   - "Multiple identical-text buttons in same row — disambiguate by index, not by find"

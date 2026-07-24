@@ -35,5 +35,9 @@ billing_email_supported: false
 ## Known Quirks
 
 - The dashboard's estimated annual consumption can differ from the last billed annual consumption. Use the invoice's billed kWh for any tariff comparison.
-- The authenticated XHR `/ewiapi/contract/<contract-number>/changePossibilities` exposes contract details (product change dates, prices, contract periods, linked AGB). A plain same-origin `fetch` to it can return 401 because the app adds authorization in its own interceptor — capture the already-authorized response through network events after loading the page instead.
+- `/contract/change` can show internal renewal offers, but the displayed first-year total is calculated with the dashboard estimate; recompute with the invoice's actual annual usage before comparing.
+- The authenticated XHR `/ewiapi/contract/<contract-number>/changePossibilities` exposes `contractData.contractDetails.productChangeDate`, price-activation dates, customer class, offer prices, bonuses, contract periods, and linked AGB. A plain same-origin `fetch` to it can return 401 because the app adds authorization in its own interceptor — capture the already-authorized response through network events after loading the page instead.
+- Compare against the API's `customerContact.customerType` so a business contract is not compared with private-customer offers.
+- Read the linked AGB for each offer separately — similar-looking offers can differ in pre-supply cancellation rights, initial term, and price-guarantee exclusions.
+- The portal can expose an end-of-current-contract date and a new-price activation date that differ by one day. Treat the explicit `productChangeDate` as the intended supply start and disclose any inconsistency rather than silently choosing one.
 - `/contract-details` shows current gross work price, annual base price, price-valid-from date, notice period, and next cancellable date.

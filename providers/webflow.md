@@ -12,7 +12,7 @@ billing_email_url: /dashboard/workspace/{workspace-slug}/billing?ref=billing_tab
 
 ## Navigation
 
-1. Go to the Workspace billing page (`/dashboard/workspace/{workspace-slug}/billing`).
+1. Go to the Workspace billing page (`/dashboard/workspace/{workspace-slug}/billing`). The workspace slug is visible in the dashboard URL after login, or via the workspace switcher in the top-left of the dashboard.
 2. Wait for the billing page progress indicator to disappear.
 3. Find the `All invoices` table. It contains Workspace-plan invoices, Site-plan invoices, and marketplace/template purchases combined.
 4. Click `Show more`, wait about 3.2 seconds, and repeat until the button disappears — the row count changes only after roughly 3 seconds per click.

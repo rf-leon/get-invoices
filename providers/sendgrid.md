@@ -15,7 +15,7 @@ billing_email_url: /account/billing
 
 1. Login via the OLD SendGrid login (`app.sendgrid.com` / `login.sendgrid.com`), NOT the Twilio console.
 2. Go to `https://app.sendgrid.com/account/billing` → "Billing" tab.
-3. Invoice list = `.invoice-item` rows, newest first. Each row: status, date ("July 1, 2026"), "PDF: Available" link (`a.pdf-dowload-link` — note SendGrid's own typo in the class name), amount.
+3. Invoice list = `.invoice-item` rows, newest first. Each row: status, a long-format date (e.g. "March 1, 2026"), "PDF: Available" link (`a.pdf-dowload-link` — note SendGrid's own typo in the class name), amount.
 
 ## The PDF endpoint (KEY)
 

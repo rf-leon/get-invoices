@@ -42,5 +42,5 @@ The interceptor capture must have a `%PDF` header. There is no reliable visible 
 
 ## Known Quirks
 
-- Invoice number formats changed over time: recent invoices use `IN-xxxxxxxx`; earlier ones `CFUSA...`; very old (2016-era) portal rows expose a full UUID while the PDF prints only a shortened `INV-` prefix plus the first six UUID characters — validate by prefix for those.
+- Invoice number formats changed over the platform's history: recent invoices use `IN-xxxxxxxx`; earlier ones `CFUSA...`; the oldest portal rows expose a full UUID while the PDF prints only a shortened `INV-` prefix plus the first six UUID characters — validate by prefix for those.
 - Pagination: "Next page" is enabled until the last page, where it renders disabled.

@@ -23,10 +23,21 @@ ALLOWED_KEYS = {
     "billing_email_url",
 }
 
+ALLOWED_DOWNLOAD_PATTERNS = {
+    "fetch-blob", "xhr-blob", "in-page-fetch", "anchor-direct", "anchor-blob",
+    "window-open", "anchor-redirect-pdf-viewer", "direct-nav", "os-download",
+    "unknown",  # recipe verified before the interception pattern was confirmed
+}
+ALLOWED_EXTRACTION_BRIDGES = {
+    "clipboard", "chunked-base64", "direct-nav", "cdp-bridge", "os-download",
+}
+
 PATTERNS = [
     ("email address", re.compile(r"\b[\w.+-]+@[\w-]+\.\w{2,}\b")),
     ("IBAN", re.compile(r"\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b")),
     ("long digit run (customer/contract/invoice number?)", re.compile(r"\b\d{7,}\b")),
+    ("account-id-like hex/UUID", re.compile(r"\b[0-9a-f]{20,}\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b")),
+    ("named Chrome profile (session note)", re.compile(r'Chrome profile ["`“][^"`”]+["`”]|\b(Work|Personal) Chrome\b')),
     ("personal-state field", re.compile(r"^(billing_email_set|company_tag)\s*:", re.M)),
 ]
 
@@ -57,6 +68,14 @@ def lint(directory: Path) -> list[str]:
         for key in keys:
             if key not in ALLOWED_KEYS:
                 findings.append(f"{rel}: frontmatter key '{key}' is not allowlisted")
+
+        for field, allowed in (
+            ("download_pattern", ALLOWED_DOWNLOAD_PATTERNS),
+            ("extraction_bridge", ALLOWED_EXTRACTION_BRIDGES),
+        ):
+            m = re.search(rf"^{field}\s*:\s*(\S+)", text, re.M)
+            if m and m.group(1) not in allowed:
+                findings.append(f"{rel}: {field} value '{m.group(1)}' is not a documented value")
 
         for label, pattern in PATTERNS:
             for m in pattern.finditer(text):

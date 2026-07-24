@@ -20,7 +20,7 @@ class PaperlessHandler(BaseHTTPRequestHandler):
             "id": 42,
             "title": "Placetel Rechnung Nr. INV-42",
             "content": "Placetel Rechnungsnummer INV-42",
-            "tags": [6, 19, 26],
+            "tags": [101, 150, 260],
             "correspondent": 1,
             "document_type": None,
         }
@@ -67,7 +67,7 @@ class PaperlessHandler(BaseHTTPRequestHandler):
 
 class PaperlessReconcileTest(unittest.TestCase):
     def setUp(self) -> None:
-        PaperlessHandler.documents[42]["tags"] = [6, 19, 26]
+        PaperlessHandler.documents[42]["tags"] = [101, 150, 260]
         PaperlessHandler.documents[42]["correspondent"] = 1
         PaperlessHandler.documents[42]["document_type"] = None
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), PaperlessHandler)
@@ -99,22 +99,22 @@ class PaperlessReconcileTest(unittest.TestCase):
             "--document-id",
             "42",
             "--ensure-tag",
-            "6",
+            "101",
             "--ensure-tag",
-            "9",
+            "102",
             "--remove-tag",
-            "19",
+            "150",
             "--ensure-correspondent",
             "300",
             "--ensure-document-type",
-            "1",
+            "400",
             "--dry-run",
         )
-        self.assertEqual(result["old_tags"], [6, 19, 26])
-        self.assertEqual(result["desired_tags"], [6, 9, 26])
+        self.assertEqual(result["old_tags"], [101, 150, 260])
+        self.assertEqual(result["desired_tags"], [101, 102, 260])
         self.assertEqual(result["desired_correspondent"], 300)
-        self.assertEqual(result["desired_document_type"], 1)
-        self.assertEqual(PaperlessHandler.documents[42]["tags"], [6, 19, 26])
+        self.assertEqual(result["desired_document_type"], 400)
+        self.assertEqual(PaperlessHandler.documents[42]["tags"], [101, 150, 260])
         self.assertEqual(PaperlessHandler.documents[42]["correspondent"], 1)
         self.assertIsNone(PaperlessHandler.documents[42]["document_type"])
 
@@ -125,23 +125,23 @@ class PaperlessReconcileTest(unittest.TestCase):
             "--invoice-number",
             "INV-42",
             "--ensure-tag",
-            "6",
+            "101",
             "--ensure-tag",
-            "9",
+            "102",
             "--remove-tag",
-            "19",
+            "150",
             "--ensure-correspondent",
             "300",
             "--ensure-document-type",
-            "1",
+            "400",
         )
         self.assertTrue(result["changed"])
-        self.assertEqual(result["verified_tags"], [6, 9, 26])
+        self.assertEqual(result["verified_tags"], [101, 102, 260])
         self.assertEqual(result["verified_correspondent"], 300)
-        self.assertEqual(result["verified_document_type"], 1)
-        self.assertEqual(PaperlessHandler.documents[42]["tags"], [6, 9, 26])
+        self.assertEqual(result["verified_document_type"], 400)
+        self.assertEqual(PaperlessHandler.documents[42]["tags"], [101, 102, 260])
         self.assertEqual(PaperlessHandler.documents[42]["correspondent"], 300)
-        self.assertEqual(PaperlessHandler.documents[42]["document_type"], 1)
+        self.assertEqual(PaperlessHandler.documents[42]["document_type"], 400)
 
 
 if __name__ == "__main__":

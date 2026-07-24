@@ -16,11 +16,11 @@ Learn Mode navigates the portal, performs one verified fetch, and saves the reci
 
 ### The manual way
 
-1. Copy [`providers/_template.md`](providers/_template.md) to `providers/<vendor>.md` (short lowercase name, e.g. `hetzner.md`).
+1. Copy [`providers/_template.md`](providers/_template.md) to `providers/<vendor>.md` (short lowercase name, e.g. `hetzner.md`) and **delete the entire "Personal fields" frontmatter section** — those fields are rejected by CI in bundled recipes.
 2. Fill in navigation, loading behavior, download/button details, and known quirks.
 3. Verify the recipe with at least one real successful fetch.
-4. Run `node scripts/sync-plugin-skill.mjs && python3 scripts/lint-providers.py`.
-5. Open a pull request.
+4. Run `node scripts/sync-plugin-skill.mjs && node scripts/sync-plugin-skill.mjs --check && python3 scripts/lint-providers.py`.
+5. Open a pull request (include the regenerated `skills/get-invoices/` mirror in your commit).
 
 ## The one hard rule: recipes describe websites, not accounts
 

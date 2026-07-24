@@ -88,7 +88,7 @@ No visible signal on the page — rely on the interceptor's `__capturedPdfs` arr
 - Filenames are unrelated to the displayed Rechnungsnummer — always rename based on the table row.
 - A single monthly invoice produces two PDFs (Beleg + Einzelverbindungsnachweis) plus a CSV.
 - Contract IDs are UUIDs in the URL path — invoice URL is per-contract, so save the contract ID for repeat runs. Configure once per contract; multi-contract accounts need a contract selector in the sidebar.
-- Session may be tied to a work Chrome profile; use the profile where the EWE Go account is already signed in.
+- Session is tied to whichever Chrome profile holds the EWE Go login; use that profile.
 - All invoices visible on one page (no pagination observed for small accounts).
 - Anchor downloads use `dispatchEvent` — the interceptor cannot suppress the OS download, only mirror it in memory. Skill must clean up `~/Downloads/` after upload.
 - The "PDF" download buttons in Beleg and Einzelverbindungsnachweis columns are visually identical; `find` returns whichever is first in DOM order. Always disambiguate by button index.
